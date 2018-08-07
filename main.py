@@ -5,22 +5,21 @@ from Player import *
 
 pygame.init()
 
-screen = pygame.display.set_mode((display_width, display_height)) #Размеры окна
+screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN) #Размеры окна
 pygame.display.set_caption(display_title) #Надпись вверху окна
 background_image = pygame.image.load(background_one) #Фон поля
 clock = pygame.time.Clock() #Для FPS
-
-playerStand = pygame.image.load('images/character/stand.png') #Персонаж
-
 
 def render(): #Рендер всего
 
 	screen.blit(background_image, (0, 0)) #Установка фонового изображения (поле)
 
-	global animCount
+	global animCount, standAnimCount
 
 	if animCount + 1 >= 30:
 		animCount = 0
+	if standAnimCount + 1 >= 8:
+		standAnimCount = 0
 
 	if left or right or up or down:
 		if left:
@@ -32,15 +31,16 @@ def render(): #Рендер всего
 			animCount += 1
 			print(animCount, right, "Анимация вправо", animCount // 3)
 		if up:
-			screen.blit(walkLeft[animCount // 5], (x,y))
+			screen.blit(walkUp[animCount // 3], (x,y))
 			animCount += 1
 			print(animCount, up, "Анимация вверх")
 		if down:
-			screen.blit(walkRight[animCount // 5], (x,y))
+			screen.blit(walkDown[animCount // 3], (x,y))
 			animCount += 1
 			print(animCount, down, "Анимаци вниз")
 	else:
-		screen.blit(playerStand, (x,y))
+		screen.blit(stand[standAnimCount // 3], (x,y))
+		standAnimCount += 1
 		print("Стою")
 
 	pygame.display.update()
@@ -50,7 +50,6 @@ def event_handler(): #Идентефикация нажатия на клави�
 		if event.type == QUIT or (event.type == KEYDOWN and (event.key == K_ESCAPE)):
 			pygame.quit()
 			isRunning = False
-
 
 def walk(): #Ходьба
 	pygame.init()
