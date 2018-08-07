@@ -51,22 +51,25 @@ def render():
 	if animCount + 1 >= 30:
 		animCount = 0
 
-	if left:
-		screen.blit(walkLeft[animCount // 3], (x,y))
-		animCount += 1
-		print(animCount, left, "Анимация влево")
-	elif right:
-		screen.blit(walkRight[animCount // 3], (x,y))
-		animCount += 1
-		print(animCount, right, "Анимация вправо", animCount // 3)
-	elif up:
-		#screen.blit(walkUp[animCount // 5], (x,y))
-		animCount += 1
-		print(animCount, up, "Анимация вверх")
-	elif down:
-		#screen.blit(walkDown[animCount // 5], (x,y))
-		animCount += 1
-		print(animCount, down, "Анимаци вниз")
+	if left or right or up or down:
+		if left:
+			screen.blit(walkLeft[animCount // 3], (x,y))
+			animCount += 1
+			print(animCount, left, "Анимация влево")
+		if right:
+			screen.blit(walkRight[animCount // 3], (x,y))
+			animCount += 1
+			print(animCount, right, "Анимация вправо", animCount // 3)
+		if up:
+		          #Раскоментировали эти строчки, чтобы узнать может ли он ходить, и ещё поменяли ему анимацию, так как оригинальной нет
+			screen.blit(walkLeft[animCount // 5], (x,y))
+			animCount += 1
+			print(animCount, up, "Анимация вверх")
+		if down:
+		          #Раскоментировали эти строчки, чтобы узнать может ли он ходить, и ещё поменяли ему анимацию, так как оригинальной нет
+			screen.blit(walkRight[animCount // 5], (x,y))
+			animCount += 1
+			print(animCount, down, "Анимаци вниз")
 	else:
 		screen.blit(playerStand, (x,y))
 		print("Стою")
@@ -87,30 +90,38 @@ def walk():
 	global left, right, up, down
 
 	keys = pygame.key.get_pressed()
-
-	if keys[pygame.K_LEFT] and x > 1:
-		x -= speed
-		left = True
-		right = False
-	if keys[pygame.K_RIGHT] and x < display_width - width - 1:
-		x += speed
-		left = False
-		right = True
-	elif keys[pygame.K_UP] and y > 1:
-		y -= speed
-		up = True
-		down = False
+    
+	if keys[pygame.K_LEFT] or keys[pygame.K_RIGHT] or keys[pygame.K_UP] or  keys[pygame.K_DOWN]: 
+		if keys[pygame.K_LEFT] and x > 1:
+			x -= speed
+			left = True
+			right = False
+			up = False
+			down = False
+		if keys[pygame.K_RIGHT] and x < display_width - width - 1:
+			x += speed
+			left = False
+			right = True
+			up = False
+			down = False
+		if keys[pygame.K_UP] and y > 1:
+			y -= speed
+			left = False
+			right = False
+			up = True
+			down = False
+		if keys[pygame.K_DOWN] and y < display_height - height + 1:
+			y += speed
+			left = False
+			right = False
+			up = False
+			down = True
 	else:
 		left = False
 		right = False
 		up = False
 		down = False
 		animCount = 0
-
-	if keys[pygame.K_DOWN] and y < display_height - height + 1:
-		y += speed
-		up = False
-		down = True
 
 isRunning = True
 
