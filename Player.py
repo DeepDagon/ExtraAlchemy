@@ -2,6 +2,7 @@ import pygame
 from Constant import *
 
 
+pygame.init()
 
 walkRight = [pygame.image.load('images/character/walk/right/right_0.png'),
 pygame.image.load('images/character/walk/right/right_1.png'), pygame.image.load('images/character/walk/right/right_2.png'),
@@ -33,4 +34,3 @@ pygame.image.load('images/character/walk/down/down_9.png')]
 
 stand = [pygame.image.load('images/character/stand/down/standdown_0.png'),
 pygame.image.load('images/character/stand/down/standdown_1.png'), pygame.image.load('images/character/stand/down/standdown_2.png')]
-

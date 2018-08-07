@@ -1,19 +1,37 @@
-import pygame
+from pygame import display, image, time, event, init, key
 from pygame.locals import *
 from Constant import *
 from Player import *
+#from Plants import *
 
 pygame.init()
 
-screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN) #Размеры окна
+#screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN) #Полный экран
+screen = pygame.display.set_mode((display_width, display_height)) #Размеры окна
 pygame.display.set_caption(display_title) #Надпись вверху окна
 background_image = pygame.image.load(background_one) #Фон поля
 clock = pygame.time.Clock() #Для FPS
 
-def render(): #Рендер всего
+class Sprite:
+	def __init__(self, xpos, ypos, filename):
+		self.x = xpos
+		self.y = ypos
+		self.bitmap = pygame.image.load(filename)
+		self.bitmap.set_colorkey((0, 0, 0))
+	def render(self):
+		screen.blit(self.bitmap,(self.x, self.y))
+		print("Я РАБОТАЮ")
 
+sunPlants = Sprite(0,0, 'images/plants/sunPlants.png')
+shadowPlants = Sprite(200,50, 'images/plants/shadowPlants.png')
+waterPlants = Sprite(500,0, 'images/plants/waterPlants.png')
+
+def baserender(): #Рендер всего
 	screen.blit(background_image, (0, 0)) #Установка фонового изображения (поле)
 
+	sunPlants.render()
+	shadowPlants.render()
+	waterPlants.render()
 	global animCount, standAnimCount
 
 	if animCount + 1 >= 30:
@@ -72,6 +90,7 @@ def walk(): #Ходьба
 			right = True
 			up = False
 			down = False
+			print("Я ИДУ ВПРАВО", x, y)
 		if keys[pygame.K_UP] and y > 1:
 			y -= speed
 			left = False
@@ -94,10 +113,10 @@ def walk(): #Ходьба
 isRunning = True
 
 while isRunning:
-	clock.tick(30)  #Кадров в секунду
 	event_handler()
 	walk()
-	render()
+	baserender()
+	clock.tick(30)  #Кадров в секунду
 
 pygame.quit()
 
