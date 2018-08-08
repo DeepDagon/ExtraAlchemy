@@ -1,36 +1,123 @@
-import pygame
-from Constant import *
+from pygame.sprite import Sprite, collide_rect
+from pygame import Surface
+import pyganim
+
+move_speed = 5
+count = 0
+animationDelay = 1
+
+walkRight = ['images/character/walk/right/right_0.png',
+'images/character/walk/right/right_1.png', 'images/character/walk/right/right_2.png',
+'images/character/walk/right/right_3.png', 'images/character/walk/right/right_4.png',
+'images/character/walk/right/right_5.png', 'images/character/walk/right/right_6.png',
+'images/character/walk/right/right_7.png', 'images/character/walk/right/right_8.png',
+'images/character/walk/right/right_9.png']
+
+walkLeft = ['images/character/walk/left/left_0.png',
+'images/character/walk/left/left_1.png', 'images/character/walk/left/left_2.png',
+'images/character/walk/left/left_3.png', 'images/character/walk/left/left_4.png',
+'images/character/walk/left/left_5.png', 'images/character/walk/left/left_5.png',
+'images/character/walk/left/left_7.png', 'images/character/walk/left/left_8.png',
+'images/character/walk/left/left_9.png']
+
+walkUp = ['images/character/walk/up/up_0.png',
+'images/character/walk/up/up_1.png', 'images/character/walk/up/up_2.png',
+'images/character/walk/up/up_3.png', 'images/character/walk/up/up_4.png',
+'images/character/walk/up/up_5.png', 'images/character/walk/up/up_6.png',
+'images/character/walk/up/up_7.png', 'images/character/walk/up/up_8.png',
+'images/character/walk/up/up_9.png']
+
+walkDown = ['images/character/walk/down/down_0.png',
+'images/character/walk/down/down_1.png', 'images/character/walk/down/down_2.png',
+'images/character/walk/down/down_3.png', 'images/character/walk/down/down_4.png',
+'images/character/walk/down/down_5.png', 'images/character/walk/down/down_6.png',
+'images/character/walk/down/down_7.png', 'images/character/walk/down/down_8.png',
+'images/character/walk/down/down_9.png']
 
 
-pygame.init()
+animationStay = ['images/character/stand/down/standdown_0.png']
 
-walkRight = [pygame.image.load('images/character/walk/right/right_0.png'),
-pygame.image.load('images/character/walk/right/right_1.png'), pygame.image.load('images/character/walk/right/right_2.png'),
-pygame.image.load('images/character/walk/right/right_3.png'), pygame.image.load('images/character/walk/right/right_4.png'),
-pygame.image.load('images/character/walk/right/right_5.png'), pygame.image.load('images/character/walk/right/right_6.png'),
-pygame.image.load('images/character/walk/right/right_7.png'), pygame.image.load('images/character/walk/right/right_8.png'),
-pygame.image.load('images/character/walk/right/right_9.png')]
+class Player(Sprite):
+	def __init__(self, x, y):
+		Sprite.__init__(self)
+		self.image = Surface((100, 110))
+		self.xvel = 0
+		self.yvel = 0
+		self.rect = self.image.get_rect()
+		self.rect.x = x
+		self.rect.y = y
 
-walkLeft = [pygame.image.load('images/character/walk/left/left_0.png'),
-pygame.image.load('images/character/walk/left/left_1.png'), pygame.image.load('images/character/walk/left/left_2.png'),
-pygame.image.load('images/character/walk/left/left_3.png'), pygame.image.load('images/character/walk/left/left_4.png'),
-pygame.image.load('images/character/walk/left/left_5.png'), pygame.image.load('images/character/walk/left/left_5.png'),
-pygame.image.load('images/character/walk/left/left_7.png'), pygame.image.load('images/character/walk/left/left_8.png'),
-pygame.image.load('images/character/walk/left/left_9.png')]
+		self.image.set_colorkey((0, 0, 0))
 
-walkUp = [pygame.image.load('images/character/walk/up/up_0.png'),
-pygame.image.load('images/character/walk/up/up_1.png'), pygame.image.load('images/character/walk/up/up_2.png'),
-pygame.image.load('images/character/walk/up/up_3.png'), pygame.image.load('images/character/walk/up/up_4.png'),
-pygame.image.load('images/character/walk/up/up_5.png'), pygame.image.load('images/character/walk/up/up_6.png'),
-pygame.image.load('images/character/walk/up/up_7.png'), pygame.image.load('images/character/walk/up/up_8.png'),
-pygame.image.load('images/character/walk/up/up_9.png')]
+		def make_boltAnim(anim_list, delay):
+			boltAnim = []
+			for cadr in anim_list:
+				boltAnim.append((cadr, delay))
+			Anim = pyganim.PygAnimation(boltAnim)
+			return Anim
 
-walkDown = [pygame.image.load('images/character/walk/down/down_0.png'),
-pygame.image.load('images/character/walk/down/down_1.png'), pygame.image.load('images/character/walk/down/down_2.png'),
-pygame.image.load('images/character/walk/down/down_3.png'), pygame.image.load('images/character/walk/down/down_4.png'),
-pygame.image.load('images/character/walk/down/down_5.png'), pygame.image.load('images/character/walk/down/down_6.png'),
-pygame.image.load('images/character/walk/down/down_7.png'), pygame.image.load('images/character/walk/down/down_8.png'),
-pygame.image.load('images/character/walk/down/down_9.png')]
+		self.boltAnimStay = make_boltAnim(animationStay, animationDelay)
+		self.boltAnimStay.play()
 
-stand = [pygame.image.load('images/character/stand/down/standdown_0.png'),
-pygame.image.load('images/character/stand/down/standdown_1.png'), pygame.image.load('images/character/stand/down/standdown_2.png')]
+		self.boltAnimLeft = make_boltAnim(walkLeft, animationDelay)
+		self.boltAnimLeft.play()
+
+		self.boltAnimRight = make_boltAnim(walkRight, animationDelay)
+		self.boltAnimRight.play()
+
+		self.boltAnimUp = make_boltAnim(walkUp, animationDelay)
+		self.boltAnimUp.play()
+
+		self.boltAnimDown = make_boltAnim(walkDown, animationDelay)
+		self.boltAnimDown.play()
+
+	def update(self, left, right, up, down, plantslist):
+		if left:
+			self.xvel = -move_speed
+#			self.image.fill((0,0,0))
+#			self.boltAnimLeft.blit(self.image, (0, 0))
+		if right:
+			self.xvel = move_speed
+#			self.image.fill((0,0,0))
+#			self.boltAnimRight.blit(self.image, (0, 0))
+		if up:
+			self.yvel = -move_speed
+			self.image.fill((0,0,0))
+			self.boltAnimUp.blit(self.image, (0, 0))
+		if down:
+			self.yvel = move_speed
+			self.image.fill((0,0,0))
+			self.boltAnimDown.blit(self.image, (0, 0))
+
+		if not (left or right):
+			self.xvel = 0
+			self.image.fill((0, 0, 0))
+			self.boltAnimStay.blit(self.image, (0, 0))
+		if not (up or down):
+			self.yvel = 0
+			self.image.fill((0, 0, 0))
+			self.boltAnimStay.blit(self.image, (0, 0))
+
+		self.rect.x += self.xvel
+		self.collide(self.xvel, 0, plantslist)
+		self.rect.y += self.yvel
+		self.collide(0, self.yvel, plantslist)
+
+	def collide(self, xvel, yvel, plantslist):
+
+		global count
+
+		for plantslist in plantslist:
+			if collide_rect(self, plantslist):
+				if xvel > 0:
+					count += 1
+					print (count)
+				if xvel < 0:
+					count += 1	
+					print(count)				
+				if yvel > 0:
+					count += 1
+					print(count)
+				if yvel < 0:
+					count += 1
+					print (count)
