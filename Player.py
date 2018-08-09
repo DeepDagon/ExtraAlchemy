@@ -74,12 +74,12 @@ class Player(Sprite):
 	def update(self, left, right, up, down, plantslist):
 		if left:
 			self.xvel = -move_speed
-#			self.image.fill((0,0,0))
-#			self.boltAnimLeft.blit(self.image, (0, 0))
+			self.image.fill((0,0,0))
+			self.boltAnimLeft.blit(self.image, (0, 0))
 		if right:
 			self.xvel = move_speed
-#			self.image.fill((0,0,0))
-#			self.boltAnimRight.blit(self.image, (0, 0))
+			self.image.fill((0,0,0))
+			self.boltAnimRight.blit(self.image, (0, 0))
 		if up:
 			self.yvel = -move_speed
 			self.image.fill((0,0,0))
@@ -91,11 +91,11 @@ class Player(Sprite):
 
 		if not (left or right):
 			self.xvel = 0
-			self.image.fill((0, 0, 0))
-			self.boltAnimStay.blit(self.image, (0, 0))
 		if not (up or down):
 			self.yvel = 0
-			self.image.fill((0, 0, 0))
+
+		if not (left or right or up or down):
+			self.image.fill((0,0,0))
 			self.boltAnimStay.blit(self.image, (0, 0))
 
 		self.rect.x += self.xvel

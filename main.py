@@ -65,7 +65,7 @@ while isRunning:
 			if event.key == pygame.K_UP:
 				up = False
 			if event.key == pygame.K_DOWN:
-				down = False
+				down = False 
 
 	baserender()
 	clock.tick(60)  #Кадров в секунду
