@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 from player import *
-import pyganim
+from pyganim import *
 from plants import Plants
 import random
 

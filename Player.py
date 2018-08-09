@@ -2,9 +2,9 @@ from pygame.sprite import Sprite, collide_rect
 from pygame import Surface
 import pyganim
 
-move_speed = 5
+move_speed = 7
 count = 0
-animationDelay = 1
+animationDelay = 0.1
 
 walkRight = ['images/character/walk/right/right_0.png',
 'images/character/walk/right/right_1.png', 'images/character/walk/right/right_2.png',
