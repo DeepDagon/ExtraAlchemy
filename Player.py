@@ -107,17 +107,15 @@ class Player(Sprite):
 
 		global count
 
+		inTrigger = False
+
 		for plant in plantslist:
 			if collide_rect(self, plant):
-				if xvel > 0:
-					count += 1
-					print (count)
-				if xvel < 0:
-					count += 1	
-					print(count)				
-				if yvel > 0:
-					count += 1
-					print(count)
-				if yvel < 0:
-					count += 1
-					print (count)
+				inTrigger = True
+				if inTrigger:
+					if count == 0:
+						print("Триггер работает")
+						count = 1
+			else:
+				count = 0
+				inTrigger = False
