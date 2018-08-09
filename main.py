@@ -20,7 +20,7 @@ clock = pygame.time.Clock() #Для FPS
 #Создание героя
 hero = Player(550, 550)
 left = right = up = down = False
-
+#Группируем спрайты
 sprite_group = pygame.sprite.Group()
 sprite_group.add(hero)
 plantslist = []

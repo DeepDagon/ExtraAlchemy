@@ -49,7 +49,7 @@ class Player(Sprite):
 
 		self.image.set_colorkey((0, 0, 0))
 
-		def make_boltAnim(anim_list, delay):
+		def make_boltAnim(anim_list, delay): #Добавляет задержку к каждому кадру
 			boltAnim = []
 			for cadr in anim_list:
 				boltAnim.append((cadr, delay))
@@ -103,7 +103,7 @@ class Player(Sprite):
 		self.rect.y += self.yvel
 		self.collide(0, self.yvel, plantslist)
 
-	def collide(self, xvel, yvel, plantslist):
+	def collide(self, xvel, yvel, plantslist): #Проверяет столкновение игрока с растениями
 
 		global count
 
