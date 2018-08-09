@@ -1,8 +1,9 @@
 from pygame.sprite import Sprite, collide_rect
 from pygame import Surface
 import pyganim
+from plants import *
 
-move_speed = 7
+move_speed = 10
 count = 0
 animationDelay = 0.1
 
@@ -40,7 +41,7 @@ animationStay = ['images/character/stand/down/standdown_0.png']
 class Player(Sprite):
 	def __init__(self, x, y):
 		Sprite.__init__(self)
-		self.image = Surface((100, 110))
+		self.image = Surface((120, 120))
 		self.xvel = 0
 		self.yvel = 0
 		self.rect = self.image.get_rect()
@@ -71,7 +72,7 @@ class Player(Sprite):
 		self.boltAnimDown = make_boltAnim(walkDown, animationDelay)
 		self.boltAnimDown.play()
 
-	def update(self, left, right, up, down, plantslist):
+	def update(self, left, right, up, down, plantlist):
 		if left:
 			self.xvel = -move_speed
 			self.image.fill((0,0,0))
@@ -99,22 +100,31 @@ class Player(Sprite):
 			self.boltAnimStay.blit(self.image, (0, 0))
 
 		self.rect.x += self.xvel
-		self.collide(self.xvel, 0, plantslist)
+		self.collide(self.xvel, 0, plantlist)
 		self.rect.y += self.yvel
-		self.collide(0, self.yvel, plantslist)
+		self.collide(0, self.yvel, plantlist)
 
-	def collide(self, xvel, yvel, plantslist): #Проверяет столкновение игрока с растениями
+	def collide(self, xvel, yvel, plantlist): #Проверяет столкновение игрока с растениями
 
 		global count
-
 		inTrigger = False
-
-		for plant in plantslist:
-			if collide_rect(self, plant):
+		
+		for sprite in plantlist:
+			if collide_rect(self, sprite):
 				inTrigger = True
-				if inTrigger and count == 0:
-						print("Триггер работает")
-						count = 1
+				if isinstance(sprite, sunPlants):				
+					if inTrigger and count == 0:
+							print("sun")
+							count = 1
+				if isinstance(sprite, shadowPlants):				
+					if inTrigger and count == 0:
+							print("shadow")
+							count = 1
+
+				if isinstance(sprite, waterPlants):				
+					if inTrigger and count == 0:
+							print("water")
+							count = 1					
 			else:
 				count = 0
 				inTrigger = False

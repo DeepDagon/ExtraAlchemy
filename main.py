@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 from player import *
 from pyganim import *
-from plants import Plants
+from plants import *
 import random
 
 pygame.init()
@@ -20,17 +20,44 @@ clock = pygame.time.Clock() #Для FPS
 #Создание героя
 hero = Player(550, 550)
 left = right = up = down = False
+
 #Группируем спрайты
 sprite_group = pygame.sprite.Group()
+#ungenplant = [sunPlants, shadowPlants, waterPlants] #Список растений
+plantslist = [] #Список со всеми сгенерированными растениями
+
+sunlist = []
+shadowlist = []
+waterlist = []
+i = 0
+
+while i < 5:
+
+	XRandPos = random.randint(100, 1266) #Для рандомной генерации растений на поле
+	YRandPos = random.randint(98, 670)
+	PlantsRender = sunPlants(XRandPos, YRandPos)
+#	sunlist.append(PlantsRender)
+	sprite_group.add(PlantsRender)
+	plantslist.append(PlantsRender)
+
+	XRandPos = random.randint(100, 1266) #Для рандомной генерации растений на поле
+	YRandPos = random.randint(98, 670)
+	PlantsRender = shadowPlants(XRandPos, YRandPos)
+#	shadowlist.append(PlantsRender)
+	sprite_group.add(PlantsRender)
+	plantslist.append(PlantsRender)
+
+	XRandPos = random.randint(100, 1266) #Для рандомной генерации растений на поле
+	YRandPos = random.randint(98, 670)
+	PlantsRender = waterPlants(XRandPos, YRandPos)
+	sprite_group.add(PlantsRender)
+	plantslist.append(PlantsRender)
+#	waterlist.append(PlantsRender)
+
+	i += 1
+
+#sprite_group.add(sunlist, shadowlist, waterlist)
 sprite_group.add(hero)
-plantslist = []
-
-XRandPos = random.randint(260, 1105) #Для рандомной генерации растений на поле
-YRandPos = random.randint(256, 512)
-
-PlantsRender = Plants(XRandPos, YRandPos)
-sprite_group.add(PlantsRender)
-plantslist.append(PlantsRender)
 
 def baserender(): #Рендер всего
 	screen.blit(background_image, (0, 0)) #Установка фонового изображения (поле)
@@ -68,4 +95,5 @@ while isRunning:
 				down = False 
 
 	baserender()
+
 	clock.tick(60)  #Кадров в секунду
