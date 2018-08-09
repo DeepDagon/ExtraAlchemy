@@ -107,8 +107,8 @@ class Player(Sprite):
 
 		global count
 
-		for plantslist in plantslist:
-			if collide_rect(self, plantslist):
+		for plant in plantslist:
+			if collide_rect(self, plant):
 				if xvel > 0:
 					count += 1
 					print (count)
