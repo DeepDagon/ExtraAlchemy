@@ -105,20 +105,9 @@ class Player(Sprite):
 		self.collide(0, self.yvel, plantlist)
 
 
-	def collide(self, xvel, yvel, plantlist):
+	def collide(self, xvel, yvel, plantlist): #Проверяет столкновение игрока с растениями
 		for sprite in plantlist:
 			if collide_rect(self, sprite):
-				if isinstance(sprite, sunPlants):
-					if self.state != 'sun':
-						self.state = 'sun'                       
-						print("sun")
-	 
-				if isinstance(sprite, shadowPlants):
-					if self.state != 'shadow':
-						self.state = 'shadow' 
-						print("shadow")
-	 
-				if isinstance(sprite, waterPlants):
-					if self.state != 'water':
-						self.state = 'water' 
-						print("water")
+				sprite.is_touched()
+			else:
+				sprite.is_untouched()

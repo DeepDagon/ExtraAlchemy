@@ -76,6 +76,7 @@ start_ticks = pygame.time.get_ticks() #Запуск таймера
 roundValue = 0
 
 isRunning = True
+soundtrack_day.play()
 
 while isRunning:
 
