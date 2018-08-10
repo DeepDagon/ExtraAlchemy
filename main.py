@@ -3,6 +3,7 @@ from pygame.locals import *
 from player import *
 from pyganim import *
 from plants import *
+from gadgets import *
 from pygame import mixer
 import random
 
@@ -27,8 +28,14 @@ clock = pygame.time.Clock() #Для FPS
 soundtrack_day = pygame.mixer.Sound('sound/Soundtrack/day.wav')
 soundtrack_night = pygame.mixer.Sound('sound/Soundtrack/night.wav')
 
+#звуки
+night_start = pygame.mixer.Sound('sound/night start/1.wav')
+night_end = pygame.mixer.Sound('sound/night end/1.wav')
+start_round = pygame.mixer.Sound('sound/start round/1.wav')
+
 #Настройка шрифтов
 time_font = pygame.font.Font(None, 72)
+
 #Создание героя
 hero = Player(550, 550)
 left = right = up = down = False
@@ -63,7 +70,6 @@ def genworld():
 		i += 1
 
 genworld()
-
 sprite_group.add(hero)
 
 def baserender(): #Рендер всего
@@ -73,14 +79,15 @@ def baserender(): #Рендер всего
 	sprite_group.draw(screen)
 
 start_ticks = pygame.time.get_ticks() #Запуск таймера
-roundValue = 0
+soundValue = 0
 
 isRunning = True
-soundtrack_day.play()
 
 while isRunning:
 
 	seconds	= int((pygame.time.get_ticks()-start_ticks)/1000) #Секунды
+
+	baserender()
 
 	for event in pygame.event.get():
 		if event.type == QUIT or (event.type == KEYDOWN and (event.key == K_ESCAPE)):
@@ -105,18 +112,38 @@ while isRunning:
 				up = False
 			if event.key == pygame.K_DOWN:
 				down = False 
+			if event.key == pygame.K_l:
+				PlantsRender = lamp(hero.playerPositionX(), hero.playerPositionY())
+				sprite_group.add(PlantsRender)			
+			if event.key == pygame.K_b:
+				PlantsRender = bucket(hero.playerPositionX(), hero.playerPositionY())
+				sprite_group.add(PlantsRender)			
 
-	baserender()
+
 
 	if seconds >= 0 and seconds <= 100:
-		pass
-	elif seconds > 100 and seconds <= 200:
+		if soundValue == 0:
+			soundtrack_day.play()
+			soundValue = 1
+
+	elif seconds > 100 and seconds <= 200: #Затухание звуков и музыки перед остановкой
+		if soundValue == 1:
+			night_start.play()		
+			soundtrack_night.play()
+			soundValue = 2
+
 		screen.blit(night_mask, (0, 0))
+
 	elif seconds > 200 and seconds < 300:
-		pass
+		if soundValue == 2:
+			night_end.play()
+			soundtrack_day.play()
+			soundValue = 3
+
 	elif seconds == 300:
 		print("Время истекло")
 		exit()
+
 	else:
 		print("Ошибка времени")
 		exit()

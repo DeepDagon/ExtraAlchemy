@@ -104,6 +104,10 @@ class Player(Sprite):
 		self.rect.y += self.yvel
 		self.collide(0, self.yvel, plantlist)
 
+	def playerPositionX(self):
+		return self.rect.x
+	def playerPositionY(self):
+		return self.rect.y
 
 	def collide(self, xvel, yvel, plantlist): #Проверяет столкновение игрока с растениями
 		for sprite in plantlist:
