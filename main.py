@@ -14,16 +14,18 @@ pygame.mixer.init()
 #Настройка игрового окна 
 SIZE = (1366, 768) # Группируем ширину и высоту в одну переменную
 background_one = 'images/backgrounds/background_one.png'
+background_night_path = 'images/backgrounds/night.png'
 win_title = 'ЭкстраАлхимия'
 screen = pygame.display.set_mode((SIZE)) #Размеры окна
 pygame.display.set_caption(win_title) #Надпись вверху окна
 background_image = pygame.image.load(background_one) #Фон поля
+night_mask = pygame.image.load(background_night_path)
 
 clock = pygame.time.Clock() #Для FPS
 
 #Настройка саундтрека
-soundtrack = pygame.mixer.Sound('sound/Soundtrack/01.wav')
-#soundtrack.play(-1)
+soundtrack_day = pygame.mixer.Sound('sound/Soundtrack/day.wav')
+soundtrack_night = pygame.mixer.Sound('sound/Soundtrack/night.wav')
 
 #Настройка шрифтов
 time_font = pygame.font.Font(None, 72)
@@ -35,29 +37,32 @@ left = right = up = down = False
 sprite_group = pygame.sprite.Group()
 plantslist = [] #Список со всеми сгенерированными растениями
 
-i = 0
+def genworld():
+	i = 0
 
-while i < 5:
+	while i < 5:
 
-	XRandPos = random.randint(100, 1266) #Для рандомной генерации растений на поле
-	YRandPos = random.randint(98, 670)
-	PlantsRender = sunPlants(XRandPos, YRandPos)
-	sprite_group.add(PlantsRender)
-	plantslist.append(PlantsRender)
+		XRandPos = random.randint(90, 1276) #Для рандомной генерации растений на поле
+		YRandPos = random.randint(90, 672)
+		PlantsRender = sunPlants(XRandPos, YRandPos)
+		sprite_group.add(PlantsRender)
+		plantslist.append(PlantsRender)
 
-	XRandPos = random.randint(100, 1266) #Для рандомной генерации растений на поле
-	YRandPos = random.randint(98, 670)
-	PlantsRender = shadowPlants(XRandPos, YRandPos)
-	sprite_group.add(PlantsRender)
-	plantslist.append(PlantsRender)
+		XRandPos = random.randint(90, 1276) #Для рандомной генерации растений на поле
+		YRandPos = random.randint(90, 672)
+		PlantsRender = shadowPlants(XRandPos, YRandPos)
+		sprite_group.add(PlantsRender)
+		plantslist.append(PlantsRender)
 
-	XRandPos = random.randint(100, 1266) #Для рандомной генерации растений на поле
-	YRandPos = random.randint(98, 670)
-	PlantsRender = waterPlants(XRandPos, YRandPos)
-	sprite_group.add(PlantsRender)
-	plantslist.append(PlantsRender)
+		XRandPos = random.randint(90, 1276) #Для рандомной генерации растений на поле
+		YRandPos = random.randint(90, 672)
+		PlantsRender = waterPlants(XRandPos, YRandPos)
+		sprite_group.add(PlantsRender)
+		plantslist.append(PlantsRender)
 
-	i += 1
+		i += 1
+
+genworld()
 
 sprite_group.add(hero)
 
@@ -75,9 +80,6 @@ isRunning = True
 while isRunning:
 
 	seconds	= int((pygame.time.get_ticks()-start_ticks)/1000) #Секунды
-
-	if seconds == 300:
-		exit()
 
 	for event in pygame.event.get():
 		if event.type == QUIT or (event.type == KEYDOWN and (event.key == K_ESCAPE)):
@@ -104,6 +106,19 @@ while isRunning:
 				down = False 
 
 	baserender()
+
+	if seconds >= 0 and seconds <= 100:
+		pass
+	elif seconds > 100 and seconds <= 200:
+		screen.blit(night_mask, (0, 0))
+	elif seconds > 200 and seconds < 300:
+		pass
+	elif seconds == 300:
+		print("Время истекло")
+		exit()
+	else:
+		print("Ошибка времени")
+		exit()
 
 	time_info = u'Прошло: ' + str(seconds) + ' сек из 300'
 	screen.blit(time_font.render(time_info, 1, (253,234,168)), (400, 20))

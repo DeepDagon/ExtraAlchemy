@@ -41,13 +41,13 @@ animationStay = ['images/character/stand/down/standdown_0.png']
 class Player(Sprite):
 	def __init__(self, x, y):
 		Sprite.__init__(self)
+		self.state = None
 		self.image = Surface((120, 120))
 		self.xvel = 0
 		self.yvel = 0
 		self.rect = self.image.get_rect()
 		self.rect.x = x
 		self.rect.y = y
-
 		self.image.set_colorkey((0, 0, 0))
 
 		def make_boltAnim(anim_list, delay): #Добавляет задержку к каждому кадру
@@ -104,15 +104,21 @@ class Player(Sprite):
 		self.rect.y += self.yvel
 		self.collide(0, self.yvel, plantlist)
 
-	def collide(self, xvel, yvel, plantlist): #Проверяет столкновение игрока с растениями
-		
+
+	def collide(self, xvel, yvel, plantlist):
 		for sprite in plantlist:
 			if collide_rect(self, sprite):
-				if isinstance(sprite, sunPlants):						
+				if isinstance(sprite, sunPlants):
+					if self.state != 'sun':
+						self.state = 'sun'                       
 						print("sun")
-
+	 
 				if isinstance(sprite, shadowPlants):
+					if self.state != 'shadow':
+						self.state = 'shadow' 
 						print("shadow")
-
+	 
 				if isinstance(sprite, waterPlants):
-						print("water")					
+					if self.state != 'water':
+						self.state = 'water' 
+						print("water")
