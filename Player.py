@@ -105,26 +105,14 @@ class Player(Sprite):
 		self.collide(0, self.yvel, plantlist)
 
 	def collide(self, xvel, yvel, plantlist): #Проверяет столкновение игрока с растениями
-
-		global count
-		inTrigger = False
 		
 		for sprite in plantlist:
 			if collide_rect(self, sprite):
-				inTrigger = True
-				if isinstance(sprite, sunPlants):				
-					if inTrigger and count == 0:
-							print("sun")
-							count = 1
-				if isinstance(sprite, shadowPlants):				
-					if inTrigger and count == 0:
-							print("shadow")
-							count = 1
+				if isinstance(sprite, sunPlants):						
+						print("sun")
 
-				if isinstance(sprite, waterPlants):				
-					if inTrigger and count == 0:
-							print("water")
-							count = 1					
-			else:
-				count = 0
-				inTrigger = False
+				if isinstance(sprite, shadowPlants):
+						print("shadow")
+
+				if isinstance(sprite, waterPlants):
+						print("water")					

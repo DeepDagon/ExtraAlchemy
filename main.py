@@ -76,7 +76,7 @@ while isRunning:
 
 	seconds	= int((pygame.time.get_ticks()-start_ticks)/1000) #Секунды
 
-	if seconds == 10:
+	if seconds == 300:
 		exit()
 
 	for event in pygame.event.get():
