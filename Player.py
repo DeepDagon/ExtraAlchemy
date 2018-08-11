@@ -4,7 +4,6 @@ import pyganim
 from plants import *
 
 move_speed = 10
-count = 0
 animationDelay = 0.1
 
 walkRight = ['images/character/walk/right/right_0.png',
@@ -104,14 +103,12 @@ class Player(Sprite):
 		self.rect.y += self.yvel
 		self.collide(0, self.yvel, plantlist)
 
-	def playerPositionX(self):
-		return self.rect.x
-	def playerPositionY(self):
-		return self.rect.y
+	def playerPosition(self):
+		return self.rect.x, self.rect.y
 
 	def collide(self, xvel, yvel, plantlist): #Проверяет столкновение игрока с растениями
 		for sprite in plantlist:
 			if collide_rect(self, sprite):
-				sprite.is_touched()
+				sprite.is_touched()			
 			else:
 				sprite.is_untouched()
