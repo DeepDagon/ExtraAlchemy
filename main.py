@@ -33,6 +33,10 @@ night_start = pygame.mixer.Sound('sound/night start/1.wav')
 night_end = pygame.mixer.Sound('sound/night end/1.wav')
 sound_end = pygame.mixer.Sound('sound/start round/1.wav')
 sound_taking = pygame.mixer.Sound('sound/green/1.wav')
+sound_lamp = pygame.mixer.Sound('sound/lights/1.wav')
+sound_bucket = pygame.mixer.Sound('sound/water/1.wav')
+sound_tent = pygame.mixer.Sound('sound/tent build/1.wav')
+
 #Настройка шрифтов
 my_font = pygame.font.Font(None, 72)
 
@@ -96,6 +100,10 @@ sunTime = sunPlants(0, 0).time
 shadowTime = shadowPlants(0, 0).time
 waterTime = waterPlants(0, 0).time
 
+NumberSunPlants = 0
+NumberShadowPlants = 0
+NumberWaterPlants = 0
+
 def seconds_counter():
     global seconds, sunTime, shadowTime, waterTime
 
@@ -115,11 +123,10 @@ isRunning = True
 while isRunning:
 	playerPositionX, playerPositionY = hero.playerPosition() #Позиция игрока
 
-#	seconds	= int(pygame.time.get_ticks() / 1000) #Секунды
-
-	time_info = u'Прошло: ' + str(seconds) + ' сек из 300' 
-
-
+	time_info = u'Прошло: ' + str(seconds) + ' сек из 200' 
+	sunNumberInfo = u'Время истекло, вы собрали ' + str(NumberSunPlants) + ' солнечных растений'
+	shadowNumberInfo = str(NumberShadowPlants) + u' сумеречных растений'
+	waterNumberInfo = str(NumberWaterPlants) + u' водных растений'
 	baserender()
 
 	for event in pygame.event.get():
@@ -148,16 +155,29 @@ while isRunning:
 				down = False 
 			if event.key == pygame.K_l:
 				PlantsRender = lamp(playerPositionX, playerPositionY)
-				sprite_group.add(PlantsRender)			
+				sprite_group.add(PlantsRender)
+				sound_lamp.play()			
 			if  event.key == pygame.K_b:
 				PlantsRender = bucket(playerPositionX, playerPositionY)
 				sprite_group.add(PlantsRender)
+				sound_bucket.play()
 			if  event.key == pygame.K_t:
 				PlantsRender = tent(playerPositionX, playerPositionY)
 				sprite_group.add(PlantsRender)
+				sound_tent.play()
 			if  event.key == pygame.K_s:
-				sound_taking.play()
-
+				if seconds >= 80 and seconds < 100 and sunTime > 80:
+					sunTime = 0
+					NumberSunPlants += 5
+					sound_taking.play()
+				if seconds >= 140 and seconds < 160 and shadowTime > 140:
+					shadowTime = 0
+					NumberShadowPlants += 5
+					sound_taking.play()
+				if seconds >= 180 and seconds < 200 and waterTime > 180:
+					waterTime = 0
+					NumberWaterPlants += 5 
+					sound_taking.play()
 
 	if seconds >= 0 and seconds <= 100:		
 		screen.blit(my_font.render(time_info, 1, (253,234,168)), (400, 20))
@@ -177,29 +197,24 @@ while isRunning:
 
 		screen.blit(night_mask, (0, 0))
 
-		if seconds >= 180 and seconds < 200:
+		if seconds >= 140 and seconds < 160:
 			screen.blit(my_font.render('Скорее собирай сумеречные растения!', 1, (253,234,168)), (200, 70))
 
-	elif seconds > 200 and seconds <= 300:
-		screen.blit(my_font.render(time_info, 1, (253,234,168)), (400, 20))
-		if soundValue == 2:
-			night_end.play()
-			soundtrack_day.play()
-			soundValue = 3
-
-		if seconds >= 280 and seconds < 300:
+		if seconds >= 180 and seconds < 200:
 			screen.blit(my_font.render('Скорее собирай водные растения!', 1, (253,234,168)), (200, 70))
 
-	elif seconds == 300:
+	elif seconds == 200:
 		sound_end.play()
 
-	elif seconds > 300:
-		screen.blit(my_font.render('Время истекло', 1, (253,234,168)), (253, 70))
+	elif seconds > 200:
+		screen.blit(my_font.render(sunNumberInfo, 1, (253,234,168)), (70, 70))
+		screen.blit(my_font.render(shadowNumberInfo, 1, (253,234,168)), (400, 120))
+		screen.blit(my_font.render(waterNumberInfo, 1, (253,234,168)), (450, 170))
 
 	else:
 		print("Ошибка времени")
 		exit()
 
-	print(sunTime, shadowTime, waterTime)
+#	print(sunTime, shadowTime, waterTime, sunReadyStatus, NumberSunPlants, NumberShadowPlants, NumberWaterPlants)
 	pygame.display.update()
 	clock.tick(60)  #Кадров в секунду

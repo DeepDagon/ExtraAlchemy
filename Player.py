@@ -5,7 +5,7 @@ from plants import *
 
 move_speed = 10
 animationDelay = 0.1
-
+sunReadyStatus = False
 walkRight = ['images/character/walk/right/right_0.png',
 'images/character/walk/right/right_1.png', 'images/character/walk/right/right_2.png',
 'images/character/walk/right/right_3.png', 'images/character/walk/right/right_4.png',
@@ -107,8 +107,11 @@ class Player(Sprite):
 		return self.rect.x, self.rect.y
 
 	def collide(self, xvel, yvel, plantlist): #Проверяет столкновение игрока с растениями
+		global sunReadyStatus
 		for sprite in plantlist:
 			if pygame.sprite.collide_rect(self, sprite):
-				sprite.is_touched()			
+				sprite.is_touched()
+				if isinstance(sprite, sunPlants):
+					sunReadyStatus = True	
 			else:
 				sprite.is_untouched()
