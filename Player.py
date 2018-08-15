@@ -1,6 +1,6 @@
+import pyganim
 from pygame.sprite import Sprite, collide_rect
 from pygame import Surface
-import pyganim
 from plants import *
 
 move_speed = 10
@@ -108,7 +108,7 @@ class Player(Sprite):
 
 	def collide(self, xvel, yvel, plantlist): #Проверяет столкновение игрока с растениями
 		for sprite in plantlist:
-			if collide_rect(self, sprite):
+			if pygame.sprite.collide_rect(self, sprite):
 				sprite.is_touched()			
 			else:
 				sprite.is_untouched()

@@ -3,7 +3,8 @@ from pygame.locals import *
 from player import *
 from plants import *
 from gadgets import *
-import random
+from threading import Thread
+import time
 
 pygame.init()
 pygame.font.init()
@@ -89,12 +90,32 @@ def baserender(): #Рендер всего
 	hero.update(left, right, up, down, plantslist)
 	sprite_group.draw(screen)
 
+seconds = 0
+
+sunTime = sunPlants(0, 0).time
+shadowTime = shadowPlants(0, 0).time
+waterTime = waterPlants(0, 0).time
+
+def seconds_counter():
+    global seconds, sunTime, shadowTime, waterTime
+
+    while True:
+        seconds += 1
+        sunTime += 1
+        shadowTime += 1
+        waterTime += 1
+        time.sleep(1)
+
+thread = Thread(target=seconds_counter)
+thread.start()
+
 soundValue = 0
 isRunning = True
+
 while isRunning:
 	playerPositionX, playerPositionY = hero.playerPosition() #Позиция игрока
 
-	seconds	= int((pygame.time.get_ticks() - start_ticks) / 1000) #Секунды
+#	seconds	= int(pygame.time.get_ticks() / 1000) #Секунды
 
 	time_info = u'Прошло: ' + str(seconds) + ' сек из 300' 
 
@@ -102,7 +123,8 @@ while isRunning:
 	baserender()
 
 	for event in pygame.event.get():
-		if event.type == QUIT or (event.type == KEYDOWN and (event.key == K_ESCAPE)):
+		if event.type == pygame.locals.QUIT or (event.type == pygame.locals.KEYDOWN and (event.key == pygame.locals.K_ESCAPE)):
+			pygame.quit()
 			exit()
 			
 		if event.type == pygame.KEYDOWN:
@@ -135,6 +157,7 @@ while isRunning:
 				sprite_group.add(PlantsRender)
 			if  event.key == pygame.K_s:
 				sound_taking.play()
+
 
 	if seconds >= 0 and seconds <= 100:		
 		screen.blit(my_font.render(time_info, 1, (253,234,168)), (400, 20))
@@ -177,6 +200,6 @@ while isRunning:
 		print("Ошибка времени")
 		exit()
 
-	print(sunPlants(0, 0).sunTime, shadowPlants(0, 0).shadowTime, waterPlants(0, 0).waterTime)
-	clock.tick(60)  #Кадров в секунду
+	print(sunTime, shadowTime, waterTime)
 	pygame.display.update()
+	clock.tick(60)  #Кадров в секунду

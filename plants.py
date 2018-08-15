@@ -1,6 +1,6 @@
+import pygame
 from pygame.sprite import Sprite
 from pygame.image import load
-import pygame
 
 pygame.mixer.pre_init(44100,-16,2, 1024)
 pygame.mixer.init()
@@ -25,8 +25,7 @@ class sunPlants(Sprite, Plants):
 		self.rect = self.image.get_rect()
 		self.rect.x = x
 		self.rect.y = y
-		self.word = 'sun'
-		self.sunTime = 0
+		self.time = 0
 
 class shadowPlants(Sprite, Plants):
 	def __init__(self, x, y):
@@ -36,8 +35,7 @@ class shadowPlants(Sprite, Plants):
 		self.rect = self.image.get_rect()
 		self.rect.x = x
 		self.rect.y = y
-		self.word = 'shadow'
-		self.shadowTime = 0
+		self.time = 0
 
 class waterPlants(Sprite, Plants):
 	def __init__(self, x, y):
@@ -47,5 +45,4 @@ class waterPlants(Sprite, Plants):
 		self.rect = self.image.get_rect()
 		self.rect.x = x
 		self.rect.y = y
-		self.word = 'water'
-		self.waterTime = 0
+		self.time = 0
