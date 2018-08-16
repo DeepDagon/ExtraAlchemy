@@ -14,14 +14,19 @@ start_ticks = pygame.time.get_ticks()
 
 # Настройка игрового окна
 SIZE = (1366, 768)  # Группируем ширину и высоту в одну переменную
-background_one = 'images/backgrounds/background_one.png'
-background_night_path = 'images/backgrounds/night.png'
+background_one = 'images/backgrounds/background_one.png' # Фон первого уровня
+background_night_path = 'images/backgrounds/night.png' # Путь до ночной маски
 win_title = 'ЭкстраАлхимия'
 screen = pygame.display.set_mode((SIZE))  # Размеры окна
 pygame.display.set_caption(win_title)  # Надпись вверху окна
 background_image = pygame.image.load(background_one)  # Фон поля
-night_mask = pygame.image.load(background_night_path)
+night_mask = pygame.image.load(background_night_path) #Ночь
 
+#Второй уровень
+cook_level_background = 'images/backgrounds/background_cook.png'
+cook_level = pygame.image.load(cook_level_background)
+
+#Frame per seconds
 FPS = pygame.time.Clock()  
 
 # Настройка саундтрека
@@ -39,6 +44,7 @@ sound_tent = pygame.mixer.Sound('sound/tent build/1.wav')
 
 # Настройка шрифтов
 my_font = pygame.font.Font(None, 72)
+irina_font = pygame.font.SysFont('IrinaCCT', 64)
 
 # Создание героя
 hero = Player(550, 550)
@@ -99,15 +105,15 @@ def baserender():  # Рендер всего
     sprite_group.draw(screen)
 
 
-seconds = 0
+seconds = 200
 
 sunTime = sunPlants(0, 0).time
 shadowTime = shadowPlants(0, 0).time
 waterTime = waterPlants(0, 0).time
 
-NumberSunPlants = 0
-NumberShadowPlants = 0
-NumberWaterPlants = 0
+NumberSunPlants = 5
+NumberShadowPlants = 5
+NumberWaterPlants = 5
 
 
 def seconds_counter():
@@ -135,7 +141,6 @@ while isRunning:
         str(NumberSunPlants) + ' солнечных растений'
     shadowNumberInfo = str(NumberShadowPlants) + u' сумеречных растений'
     waterNumberInfo = str(NumberWaterPlants) + u' водных растений'
-    baserender()
 
     for event in pygame.event.get():
         if event.type == pygame.locals.QUIT or (event.type == pygame.locals.KEYDOWN and (event.key == pygame.locals.K_ESCAPE)):
@@ -143,51 +148,50 @@ while isRunning:
             exit()
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                left = True
-            if event.key == pygame.K_RIGHT:
-                right = True
-            if event.key == pygame.K_UP:
-                up = True
-            if event.key == pygame.K_DOWN:
-                down = True
+            if event.key == pygame.K_LEFT: left = True
+            if event.key == pygame.K_RIGHT: right = True
+            if event.key == pygame.K_UP: up = True
+            if event.key == pygame.K_DOWN: down = True
 
         if event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT:
-                left = False
-            if event.key == pygame.K_RIGHT:
-                right = False
-            if event.key == pygame.K_UP:
-                up = False
-            if event.key == pygame.K_DOWN:
-                down = False
+            if event.key == pygame.K_LEFT: left = False
+            if event.key == pygame.K_RIGHT: right = False
+            if event.key == pygame.K_UP: up = False
+            if event.key == pygame.K_DOWN: down = False
+
             if event.key == pygame.K_l:
                 PlantsRender = lamp(playerPositionX, playerPositionY)
                 sprite_group.add(PlantsRender)
                 sound_lamp.play()
+
             if event.key == pygame.K_b:
                 PlantsRender = bucket(playerPositionX, playerPositionY)
                 sprite_group.add(PlantsRender)
                 sound_bucket.play()
+
             if event.key == pygame.K_t:
                 PlantsRender = tent(playerPositionX, playerPositionY)
                 sprite_group.add(PlantsRender)
                 sound_tent.play()
+
             if event.key == pygame.K_s:
                 if seconds >= 80 and seconds < 100 and sunTime > 80:
                     sunTime = 0
                     NumberSunPlants += 5
                     sound_taking.play()
+
                 if seconds >= 140 and seconds < 160 and shadowTime > 140:
                     shadowTime = 0
                     NumberShadowPlants += 5
                     sound_taking.play()
+                    
                 if seconds >= 180 and seconds < 200 and waterTime > 180:
                     waterTime = 0
                     NumberWaterPlants += 5
                     sound_taking.play()
 
     if seconds >= 0 and seconds <= 100:
+        baserender()
         screen.blit(my_font.render(time_info, 1, (253, 234, 168)), (400, 20))
         if soundValue == 0:
             soundtrack_day.play()
@@ -198,6 +202,7 @@ while isRunning:
                 'Скорее собирай солнечные растения!', 1, (253, 234, 168)), (200, 70))
 
     elif seconds > 100 and seconds <= 200: 
+        baserender()
         screen.blit(my_font.render(time_info, 1, (253, 234, 168)), (400, 20))
         if soundValue == 1:
             night_start.play()
@@ -215,15 +220,18 @@ while isRunning:
                 'Скорее собирай водные растения!', 1, (253, 234, 168)), (200, 70))
 
     elif seconds == 200:
+        baserender()
         sound_end.play()
 
     elif seconds > 200:
-        screen.blit(my_font.render(sunNumberInfo,
-                                   1, (253, 234, 168)), (70, 70))
-        screen.blit(my_font.render(shadowNumberInfo,
-                                   1, (253, 234, 168)), (400, 120))
-        screen.blit(my_font.render(waterNumberInfo,
-                                   1, (253, 234, 168)), (450, 170))
+        screen.blit(cook_level, (0, 0))
+        screen.blit(irina_font.render(sunNumberInfo,
+                                   1, (253, 234, 168)), (150, 30))
+        screen.blit(irina_font.render(shadowNumberInfo,
+                                   1, (253, 234, 168)), (450, 80))
+        screen.blit(irina_font.render(waterNumberInfo,
+                                   1, (253, 234, 168)), (500, 130))
+
 
     else:
         print("Ошибка времени")
