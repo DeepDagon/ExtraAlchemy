@@ -1,10 +1,12 @@
 from threading import Thread
 import time
+import random
 import pygame
 from pygame.locals import *
 from player import *
 from plants import *
 from gadgets import *
+from Buttons import *
 
 pygame.init()
 pygame.font.init()
@@ -14,20 +16,20 @@ start_ticks = pygame.time.get_ticks()
 
 # Настройка игрового окна
 SIZE = (1366, 768)  # Группируем ширину и высоту в одну переменную
-background_one = 'images/backgrounds/background_one.png' # Фон первого уровня
-background_night_path = 'images/backgrounds/night.png' # Путь до ночной маски
+background_one = 'images/backgrounds/background_one.png'  # Фон первого уровня
+background_night_path = 'images/backgrounds/night.png'  # Путь до ночной маски
 win_title = 'ЭкстраАлхимия'
 screen = pygame.display.set_mode((SIZE))  # Размеры окна
 pygame.display.set_caption(win_title)  # Надпись вверху окна
 background_image = pygame.image.load(background_one)  # Фон поля
-night_mask = pygame.image.load(background_night_path) #Ночь
+night_mask = pygame.image.load(background_night_path)  # Ночь
 
-#Второй уровень
+# Второй уровень
 cook_level_background = 'images/backgrounds/background_cook.png'
 cook_level = pygame.image.load(cook_level_background)
 
-#Frame per seconds
-FPS = pygame.time.Clock()  
+# Frame per seconds
+FPS = pygame.time.Clock()
 
 # Настройка саундтрека
 soundtrack_day = pygame.mixer.Sound('sound/Soundtrack/day.wav')
@@ -133,7 +135,11 @@ thread.start()
 soundValue = 0
 isRunning = True
 
+#Список зелий
+potionlist = ['desert', 'sunset', 'fog', 'invisible', 'swamp', 'water', 'underwater']
+potionDesertNumber = 0
 while isRunning:
+    Button1 = Button()
     playerPositionX, playerPositionY = hero.playerPosition()  # Позиция игрока
 
     time_info = u'Прошло: ' + str(seconds) + ' сек из 200'
@@ -148,16 +154,24 @@ while isRunning:
             exit()
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT: left = True
-            if event.key == pygame.K_RIGHT: right = True
-            if event.key == pygame.K_UP: up = True
-            if event.key == pygame.K_DOWN: down = True
+            if event.key == pygame.K_LEFT:
+                left = True
+            if event.key == pygame.K_RIGHT:
+                right = True
+            if event.key == pygame.K_UP:
+                up = True
+            if event.key == pygame.K_DOWN:
+                down = True
 
         if event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT: left = False
-            if event.key == pygame.K_RIGHT: right = False
-            if event.key == pygame.K_UP: up = False
-            if event.key == pygame.K_DOWN: down = False
+            if event.key == pygame.K_LEFT:
+                left = False
+            if event.key == pygame.K_RIGHT:
+                right = False
+            if event.key == pygame.K_UP:
+                up = False
+            if event.key == pygame.K_DOWN:
+                down = False
 
             if event.key == pygame.K_l:
                 PlantsRender = lamp(playerPositionX, playerPositionY)
@@ -184,7 +198,7 @@ while isRunning:
                     shadowTime = 0
                     NumberShadowPlants += 5
                     sound_taking.play()
-                    
+
                 if seconds >= 180 and seconds < 200 and waterTime > 180:
                     waterTime = 0
                     NumberWaterPlants += 5
@@ -201,7 +215,7 @@ while isRunning:
             screen.blit(my_font.render(
                 'Скорее собирай солнечные растения!', 1, (253, 234, 168)), (200, 70))
 
-    elif seconds > 100 and seconds <= 200: 
+    elif seconds > 100 and seconds <= 200:
         baserender()
         screen.blit(my_font.render(time_info, 1, (253, 234, 168)), (400, 20))
         if soundValue == 1:
@@ -226,13 +240,28 @@ while isRunning:
     elif seconds > 200:
         screen.blit(cook_level, (0, 0))
         screen.blit(irina_font.render(sunNumberInfo,
-                                   1, (253, 234, 168)), (150, 30))
+                                      1, (253, 234, 168)), (150, 30))
         screen.blit(irina_font.render(shadowNumberInfo,
-                                   1, (253, 234, 168)), (450, 80))
+                                      1, (253, 234, 168)), (450, 80))
         screen.blit(irina_font.render(waterNumberInfo,
-                                   1, (253, 234, 168)), (500, 130))
+                                      1, (253, 234, 168)), (500, 130))
+        Button1.create_button(screen, (107, 142, 35), 590, 200, 250, 100, 0,
+                              "Сварить зелья", (255, 255, 255))
+        screen.blit(irina_font.render(str(potionDesertNumber),
+            1, (253, 234, 168)), (100, 350))
+        for event in pygame.event.get():
+            if event.type == pygame.locals.QUIT or (event.type == pygame.locals.KEYDOWN
+                                                    and (event.key == pygame.locals.K_ESCAPE)):
+                pygame.quit()
+                exit()
 
-
+            if event.type == MOUSEBUTTONDOWN:
+                if Button1.pressed(pygame.mouse.get_pos()):
+                        potionPoint = potionlist[random.randint(0, 6)]
+                        if potionPoint == 'desert' and NumberSunPlants >= 2:
+                            NumberSunPlants -= 2
+                            potionDesertNumber += 1
+#                       elif potionPoint == 'sunset' and NumberSunPlants >= 1 and NumberShadowPlants >= 2:
     else:
         print("Ошибка времени")
         exit()
