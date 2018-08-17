@@ -136,10 +136,32 @@ soundValue = 0
 isRunning = True
 
 #Список зелий
-potionlist = ['desert', 'sunset', 'fog', 'invisible', 'swamp', 'water', 'underwater']
-potionDesertNumber = 0
+potionlist = ['desert', 'sunset', 'fog', 'invisible', 'swamp', 'underwater']
+
+#Количество зелий
+desertNumber = 0
+sunsetNumber = 0
+fogNumber = 0
+invisibleNumber = 0
+swampNumber = 0
+underwaterNumber = 0
+
+#Кнопки
+desertButton = desertButton()
+sunsetButton = sunsetButton()
+fogButton = fogButton()
+invisibleButton = invisibleButton()
+swampButton = swampButton()
+underwaterButton = underwaterButton()
+stopCookButton = stopCookButton()
+
 while isRunning:
-    Button1 = Button()
+
+    #Информация о зельях
+    DSFnumber = u'Пустынных: ' + str(desertNumber) + ' Закатных: ' + str(sunsetNumber) + ' Туманных: ' + str(fogNumber)
+    ISUnumber = u'Невидимости: ' + str(invisibleNumber) + ' Болотных: ' + str(swampNumber) + ' Водных: ' + str(underwaterNumber)
+
+
     playerPositionX, playerPositionY = hero.playerPosition()  # Позиция игрока
 
     time_info = u'Прошло: ' + str(seconds) + ' сек из 200'
@@ -245,10 +267,25 @@ while isRunning:
                                       1, (253, 234, 168)), (450, 80))
         screen.blit(irina_font.render(waterNumberInfo,
                                       1, (253, 234, 168)), (500, 130))
-        Button1.create_button(screen, (107, 142, 35), 590, 200, 250, 100, 0,
-                              "Сварить зелья", (255, 255, 255))
-        screen.blit(irina_font.render(str(potionDesertNumber),
-            1, (253, 234, 168)), (100, 350))
+
+        desertButton.create_button(screen, (107, 142, 35), 300, 200, 250, 100, 0,
+                              "Пустынное зелье", (255, 255, 255))
+        sunsetButton.create_button(screen, (107, 142, 35), 600, 200, 250, 100, 0,
+                              "Закатное зелье", (255, 255, 255))
+        fogButton.create_button(screen, (107, 142, 35), 900, 200, 250, 100, 0,
+                              "Туманное зелье", (255, 255, 255))
+        invisibleButton.create_button(screen, (107, 142, 35), 300, 350, 250, 100, 0,
+                              "Зелье невидимости", (255, 255, 255))
+        swampButton.create_button(screen, (107, 142, 35), 600, 350, 250, 100, 0,
+                              "Болотное зелье", (255, 255, 255))
+        underwaterButton.create_button(screen, (107, 142, 35), 900, 350, 250, 100, 0,
+                              "Подводное зелье", (255, 255, 255))
+        stopCookButton.create_button(screen, (107, 142, 35), 600, 500, 250, 100, 0,
+                              "Закончить варку", (255, 255, 255))
+
+        screen.blit(irina_font.render(DSFnumber, 1, (253, 234, 168)), (300, 620))   
+        screen.blit(irina_font.render(ISUnumber, 1, (253, 234, 168)), (290, 680))
+
         for event in pygame.event.get():
             if event.type == pygame.locals.QUIT or (event.type == pygame.locals.KEYDOWN
                                                     and (event.key == pygame.locals.K_ESCAPE)):
@@ -256,12 +293,39 @@ while isRunning:
                 exit()
 
             if event.type == MOUSEBUTTONDOWN:
-                if Button1.pressed(pygame.mouse.get_pos()):
-                        potionPoint = potionlist[random.randint(0, 6)]
-                        if potionPoint == 'desert' and NumberSunPlants >= 2:
-                            NumberSunPlants -= 2
-                            potionDesertNumber += 1
-#                       elif potionPoint == 'sunset' and NumberSunPlants >= 1 and NumberShadowPlants >= 2:
+                if desertButton.pressed(pygame.mouse.get_pos()) and NumberSunPlants >= 2:
+                    NumberSunPlants -= 2
+                    desertNumber += 1 
+
+                if sunsetButton.pressed(pygame.mouse.get_pos()) and NumberSunPlants >= 1 and NumberShadowPlants >= 2:
+                    NumberSunPlants -= 1
+                    NumberShadowPlants -= 2
+                    sunsetNumber += 1
+
+                if fogButton.pressed(pygame.mouse.get_pos()) and NumberSunPlants >= 2 and NumberWaterPlants >= 1:
+                    NumberSunPlants -= 2
+                    NumberWaterPlants -= 1
+                    fogNumber += 1
+
+                if invisibleButton.pressed(pygame.mouse.get_pos()) and NumberShadowPlants >= 2:
+                    NumberShadowPlants -= 2
+                    invisibleNumber += 1
+
+                if swampButton.pressed(pygame.mouse.get_pos()) and NumberShadowPlants >= 2 and NumberWaterPlants >= 2:
+                    NumberShadowPlants -= 2
+                    NumberWaterPlants -= 2
+                    swampNumber += 1
+
+                if underwaterButton.pressed(pygame.mouse.get_pos()) and NumberSunPlants >= 1 and NumberShadowPlants >= 1 and NumberWaterPlants >= 1:
+                    NumberSunPlants -= 1
+                    NumberShadowPlants -= 1
+                    NumberWaterPlants -= 1
+                    underwaterNumber += 1
+                if stopCookButton.pressed(pygame.mouse.get_pos()):
+                    print("Варка закончена")
+                    pygame.quit()
+                    exit()
+
     else:
         print("Ошибка времени")
         exit()
