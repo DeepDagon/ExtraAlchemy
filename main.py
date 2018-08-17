@@ -31,17 +31,19 @@ cook_level = pygame.image.load(cook_level_background)
 FPS = pygame.time.Clock()
 
 # Настройка саундтрека
-soundtrack_day = pygame.mixer.Sound('sound/Soundtrack/day.wav')
-soundtrack_night = pygame.mixer.Sound('sound/Soundtrack/night.wav')
+soundtrack_day = pygame.mixer.Sound('sound/Soundtrack/day.ogg')
+soundtrack_night = pygame.mixer.Sound('sound/Soundtrack/night.ogg')
+soundtrack_cook = pygame.mixer.Sound('sound/Soundtrack/cook.ogg')
 
 # звуки
-night_start = pygame.mixer.Sound('sound/night start/1.wav')
-night_end = pygame.mixer.Sound('sound/night end/1.wav')
-sound_end = pygame.mixer.Sound('sound/start round/1.wav')
-sound_taking = pygame.mixer.Sound('sound/green/1.wav')
-sound_lamp = pygame.mixer.Sound('sound/lights/1.wav')
-sound_bucket = pygame.mixer.Sound('sound/water/1.wav')
-sound_tent = pygame.mixer.Sound('sound/tent build/1.wav')
+night_start = pygame.mixer.Sound('sound/night start/1.ogg')
+night_end = pygame.mixer.Sound('sound/night end/1.ogg')
+sound_end = pygame.mixer.Sound('sound/start round/1.ogg')
+sound_taking = pygame.mixer.Sound('sound/green/1.ogg')
+sound_lamp = pygame.mixer.Sound('sound/lights/1.ogg')
+sound_bucket = pygame.mixer.Sound('sound/water/1.ogg')
+sound_umbrella = pygame.mixer.Sound('sound/umbrella/1.ogg')
+sound_click = pygame.mixer.Sound('sound/click/1.ogg')
 
 # Настройка шрифтов
 my_font = pygame.font.Font(None, 72)
@@ -70,7 +72,7 @@ def genworld():
         i += 1
 
     i = 0
-    XPos = 600
+    XPos = 650
     YPos = 140
 
     while i < 5:
@@ -106,15 +108,15 @@ def baserender():  # Рендер всего
     sprite_group.draw(screen)
 
 
-seconds = 200
+seconds = 0
 
 sunTime = sunPlants(0, 0).time
 shadowTime = shadowPlants(0, 0).time
 waterTime = waterPlants(0, 0).time
 
-NumberSunPlants = 5
-NumberShadowPlants = 5
-NumberWaterPlants = 5
+NumberSunPlants = 0
+NumberShadowPlants = 0
+NumberWaterPlants = 0
 
 
 def seconds_counter():
@@ -131,7 +133,7 @@ def seconds_counter():
 thread = Thread(target=seconds_counter)
 thread.start()
 
-soundValue = 0
+soundValue = 1
 isRunning = True
 
 #Список зелий
@@ -159,6 +161,7 @@ ThirdStage = False
 
 #Деньги за зелья
 money = 0
+moneyInfo = ' '
 
 while isRunning:
 
@@ -170,8 +173,7 @@ while isRunning:
     playerPositionX, playerPositionY = hero.playerPosition()  # Позиция игрока
 
     time_info = u'Прошло: ' + str(seconds) + ' сек из 200'
-    sunNumberInfo = u'Время истекло, вы собрали ' + \
-        str(NumberSunPlants) + ' солнечных растений'
+    sunNumberInfo = u'Время истекло, вы собрали ' + str(NumberSunPlants) + ' солнечных растений'
     shadowNumberInfo = str(NumberShadowPlants) + u' сумеречных растений'
     waterNumberInfo = str(NumberWaterPlants) + u' водных растений'
 
@@ -213,7 +215,7 @@ while isRunning:
             if event.key == pygame.K_t:
                 PlantsRender = tent(playerPositionX, playerPositionY)
                 sprite_group.add(PlantsRender)
-                sound_tent.play()
+                sound_umbrella.play()
 
             if event.key == pygame.K_s:
                 if seconds >= 80 and seconds < 100 and sunTime > 80:
@@ -234,9 +236,9 @@ while isRunning:
     if seconds >= 0 and seconds <= 100:
         baserender()
         screen.blit(my_font.render(time_info, 1, (253, 234, 168)), (400, 20))
-        if soundValue == 0:
+        if soundValue == 1:
             soundtrack_day.play()
-            soundValue = 1
+            soundValue = 2
 
         if seconds >= 80 and seconds < 100:
             screen.blit(my_font.render(
@@ -245,10 +247,10 @@ while isRunning:
     elif seconds > 100 and seconds <= 200:
         baserender()
         screen.blit(my_font.render(time_info, 1, (253, 234, 168)), (400, 20))
-        if soundValue == 1:
+        if soundValue == 2:
             night_start.play()
             soundtrack_night.play()
-            soundValue = 2
+            soundValue = 3
 
         screen.blit(night_mask, (0, 0))
 
@@ -265,6 +267,10 @@ while isRunning:
         sound_end.play()
 
     elif seconds > 200:
+        if soundValue == 3:
+            soundtrack_cook.play(-1)
+            soundValue = 0
+
         screen.blit(cook_level, (0, 0))
         screen.blit(irina_font.render(sunNumberInfo,
                                       1, (253, 234, 168)), (150, 30))
@@ -301,41 +307,71 @@ while isRunning:
                 if desertButton.pressed(pygame.mouse.get_pos()) and NumberSunPlants >= 2:
                     NumberSunPlants -= 2
                     desertNumber += 1 
-                    
+                    sound_click.play()
+                    money += 4
+
                 if sunsetButton.pressed(pygame.mouse.get_pos()) and NumberSunPlants >= 1 and NumberShadowPlants >= 2:
                     NumberSunPlants -= 1
                     NumberShadowPlants -= 2
                     sunsetNumber += 1
+                    sound_click.play()
+                    money += 4
 
                 if fogButton.pressed(pygame.mouse.get_pos()) and NumberSunPlants >= 2 and NumberWaterPlants >= 1:
                     NumberSunPlants -= 2
                     NumberWaterPlants -= 1
                     fogNumber += 1
+                    sound_click.play()
+                    money += 4
 
                 if invisibleButton.pressed(pygame.mouse.get_pos()) and NumberShadowPlants >= 2:
                     NumberShadowPlants -= 2
                     invisibleNumber += 1
+                    sound_click.play()
+                    money += 5
 
                 if swampButton.pressed(pygame.mouse.get_pos()) and NumberShadowPlants >= 2 and NumberWaterPlants >= 2:
                     NumberShadowPlants -= 2
                     NumberWaterPlants -= 2
                     swampNumber += 1
+                    sound_click.play()
+                    money += 4
 
                 if underwaterButton.pressed(pygame.mouse.get_pos()) and NumberSunPlants >= 1 and NumberShadowPlants >= 1 and NumberWaterPlants >= 1:
                     NumberSunPlants -= 1
                     NumberShadowPlants -= 1
                     NumberWaterPlants -= 1
                     underwaterNumber += 1
+                    sound_click.play()
+                    money += 5
+
                 if stopCookButton.pressed(pygame.mouse.get_pos()):
                     ThirdStage = True
+                    sound_end.play()
 
         if ThirdStage:
             screen.blit(cook_level, (0,0))
-            
+
+            if money == 0:
+                moneyInfo = 'Вы ничего не продали'
+
+            elif money == 1 or money == 21:
+                moneyInfo = 'Вы получили за зелья: ' + str(money) + ' золотую монету'
+
+            elif money in range(2, 4) or money in range(22, 24): 
+                moneyInfo = 'Вы получили за зелья: ' + str(money) + ' золотые монеты'
+
+            elif money in randge(5, 20) or money == 25:
+                moneyInfo = 'Вы получили за зелья: ' + str(money) + ' золотых монет'
+
+            else:
+                moneyInfo = 'Что-то пошло не так :('
+
+            screen.blit(irina_font.render(moneyInfo, 1, (253, 234, 168)), (280, 360))
 
     else:
         print("Ошибка времени")
         exit()
-    print(ThirdStage)
+
     pygame.display.update()
     FPS.tick(60)
