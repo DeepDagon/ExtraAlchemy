@@ -12,7 +12,6 @@ pygame.init()
 pygame.font.init()
 pygame.mixer.pre_init(44100, -16, 2, 1024)
 pygame.mixer.init()
-start_ticks = pygame.time.get_ticks()
 
 # Настройка игрового окна
 SIZE = (1366, 768)  # Группируем ширину и высоту в одну переменную
@@ -155,6 +154,12 @@ swampButton = swampButton()
 underwaterButton = underwaterButton()
 stopCookButton = stopCookButton()
 
+#Третий этап
+ThirdStage = False
+
+#Деньги за зелья
+money = 0
+
 while isRunning:
 
     #Информация о зельях
@@ -296,7 +301,7 @@ while isRunning:
                 if desertButton.pressed(pygame.mouse.get_pos()) and NumberSunPlants >= 2:
                     NumberSunPlants -= 2
                     desertNumber += 1 
-
+                    
                 if sunsetButton.pressed(pygame.mouse.get_pos()) and NumberSunPlants >= 1 and NumberShadowPlants >= 2:
                     NumberSunPlants -= 1
                     NumberShadowPlants -= 2
@@ -322,13 +327,15 @@ while isRunning:
                     NumberWaterPlants -= 1
                     underwaterNumber += 1
                 if stopCookButton.pressed(pygame.mouse.get_pos()):
-                    print("Варка закончена")
-                    pygame.quit()
-                    exit()
+                    ThirdStage = True
+
+        if ThirdStage:
+            screen.blit(cook_level, (0,0))
+            
 
     else:
         print("Ошибка времени")
         exit()
-
+    print(ThirdStage)
     pygame.display.update()
     FPS.tick(60)
