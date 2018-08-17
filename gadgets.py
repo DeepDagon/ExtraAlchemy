@@ -21,10 +21,10 @@ class bucket(pygame.sprite.Sprite):
         self.rect.y = y
 
 
-class tent(pygame.sprite.Sprite):
+class umbrella(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = load('images/tent/tent.png')
+        self.image = load('images/umbrella/umbrella.png')
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y

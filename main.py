@@ -147,6 +147,11 @@ invisibleNumber = 0
 swampNumber = 0
 underwaterNumber = 0
 
+#Количество "гаджетов"
+umbrellaNumber = 5
+lampNumber = 5
+bucketNumber = 5
+
 #Кнопки
 desertButton = desertButton()
 sunsetButton = sunsetButton()
@@ -202,20 +207,23 @@ while isRunning:
             if event.key == pygame.K_DOWN:
                 down = False
 
-            if event.key == pygame.K_l:
+            if event.key == pygame.K_l and lampNumber > 0:
                 PlantsRender = lamp(playerPositionX, playerPositionY)
                 sprite_group.add(PlantsRender)
                 sound_lamp.play()
+                lampNumber -= 1
 
-            if event.key == pygame.K_b:
+            if event.key == pygame.K_b and bucketNumber > 0:
                 PlantsRender = bucket(playerPositionX, playerPositionY)
                 sprite_group.add(PlantsRender)
                 sound_bucket.play()
+                bucketNumber -= 1
 
-            if event.key == pygame.K_t:
-                PlantsRender = tent(playerPositionX, playerPositionY)
+            if event.key == pygame.K_u and umbrellaNumber > 0:
+                PlantsRender = umbrella(playerPositionX, playerPositionY)
                 sprite_group.add(PlantsRender)
                 sound_umbrella.play()
+                umbrellaNumber -= 1
 
             if event.key == pygame.K_s:
                 if seconds >= 80 and seconds < 100 and sunTime > 80:
