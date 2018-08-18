@@ -252,30 +252,30 @@ while isRunning:
                     NumberWaterPlants += 5
                     sound_taking.play()
 
-    if seconds in range (0, 100):
+    if seconds in range (0, 101):
         baserender()
         if soundValue == 1:
             soundtrack_day.play()
             soundValue = 2
 
-        if seconds in range (80, 100):
+        if seconds in range (80, 101):
             screen.blit(my_font.render(
                 'Скорее собирай солнечные растения!', 1, (253, 234, 168)), (200, 70))
 
-    elif seconds in range (101, 200):
+    elif seconds in range (101, 201):
         baserender()
         if soundValue == 2:
             night_start.play()
             soundtrack_night.play()
             soundValue = 3
 
-        if seconds in range (140, 159):
+        if seconds in range (140, 160):
             screen.blit(my_font.render(
                 'Скорее собирай сумеречные растения!', 1, (253, 234, 168)), (200, 70))
 
-        if seconds in range(180, 199):
+        if seconds in range(180, 200):
             screen.blit(my_font.render(
-                'Скорее собирай водные растения!', 1, (253, 234, 168)), (200, 70))
+                'Скорее собирай водные растения!', 1, (253, 234, 168)), (210, 70))
 
         screen.blit(night_mask, (0, 0)) #Ночь
 
@@ -378,7 +378,7 @@ while isRunning:
             elif money in range(2, 4) or money in range(22, 24): 
                 moneyInfo = 'Вы получили за зелья: ' + str(money) + ' золотые монеты'
 
-            elif money in randge(5, 20) or money == 25:
+            elif money in range(5, 20) or money == 25:
                 moneyInfo = 'Вы получили за зелья: ' + str(money) + ' золотых монет'
 
             else:
