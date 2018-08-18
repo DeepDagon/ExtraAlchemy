@@ -48,6 +48,7 @@ sound_click = pygame.mixer.Sound('sound/click/1.ogg')
 # Настройка шрифтов
 my_font = pygame.font.Font(None, 72)
 irina_font = pygame.font.SysFont('IrinaCCT', 64)
+gadget_font = pygame.font.SysFont('IrinaCCT', 52)
 
 # Создание героя
 hero = Player(550, 550)
@@ -99,10 +100,20 @@ def genworld():
 genworld()
 sprite_group.add(hero)
 
+#Количество "гаджетов"
+umbrellaNumber = 5
+lampNumber = 5
+bucketNumber = 5
 
-def baserender():  # Рендер всего
+#Рендер всего
+def baserender():
     # Установка фонового изображения (поле)
     screen.blit(background_image, (0, 0))
+    screen.blit(my_font.render(time_info, 1, (253, 234, 168)), (400, 20))
+
+    screen.blit(gadget_font.render(umbrellaInfo, 1, (253, 234, 168)), (10, 10))   
+    screen.blit(gadget_font.render(lampInfo, 1, (253, 234, 168)), (10, 50))   
+    screen.blit(gadget_font.render(bucketInfo, 1, (253, 234, 168)), (10, 90)) 
 
     hero.update(left, right, up, down, plantslist)
     sprite_group.draw(screen)
@@ -147,11 +158,6 @@ invisibleNumber = 0
 swampNumber = 0
 underwaterNumber = 0
 
-#Количество "гаджетов"
-umbrellaNumber = 5
-lampNumber = 5
-bucketNumber = 5
-
 #Кнопки
 desertButton = desertButton()
 sunsetButton = sunsetButton()
@@ -181,6 +187,11 @@ while isRunning:
     sunNumberInfo = u'Время истекло, вы собрали ' + str(NumberSunPlants) + ' солнечных растений'
     shadowNumberInfo = str(NumberShadowPlants) + u' сумеречных растений'
     waterNumberInfo = str(NumberWaterPlants) + u' водных растений'
+    
+    #Информация о количестве гаджетов
+    umbrellaInfo = u'Зонтиков: ' + str(umbrellaNumber)
+    lampInfo = u'Ламп: ' + str(lampNumber) 
+    bucketInfo = u'Вёдер: ' + str(bucketNumber)
 
     for event in pygame.event.get():
         if event.type == pygame.locals.QUIT or (event.type == pygame.locals.KEYDOWN and (event.key == pygame.locals.K_ESCAPE)):
@@ -241,34 +252,32 @@ while isRunning:
                     NumberWaterPlants += 5
                     sound_taking.play()
 
-    if seconds >= 0 and seconds <= 100:
+    if seconds in range (0, 100):
         baserender()
-        screen.blit(my_font.render(time_info, 1, (253, 234, 168)), (400, 20))
         if soundValue == 1:
             soundtrack_day.play()
             soundValue = 2
 
-        if seconds >= 80 and seconds < 100:
+        if seconds in range (80, 100):
             screen.blit(my_font.render(
                 'Скорее собирай солнечные растения!', 1, (253, 234, 168)), (200, 70))
 
-    elif seconds > 100 and seconds <= 200:
+    elif seconds in range (101, 200):
         baserender()
-        screen.blit(my_font.render(time_info, 1, (253, 234, 168)), (400, 20))
         if soundValue == 2:
             night_start.play()
             soundtrack_night.play()
             soundValue = 3
 
-        screen.blit(night_mask, (0, 0))
-
-        if seconds >= 140 and seconds < 160:
+        if seconds in range (140, 159):
             screen.blit(my_font.render(
                 'Скорее собирай сумеречные растения!', 1, (253, 234, 168)), (200, 70))
 
-        if seconds >= 180 and seconds < 200:
+        if seconds in range(180, 199):
             screen.blit(my_font.render(
                 'Скорее собирай водные растения!', 1, (253, 234, 168)), (200, 70))
+
+        screen.blit(night_mask, (0, 0)) #Ночь
 
     elif seconds == 200:
         baserender()
