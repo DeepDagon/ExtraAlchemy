@@ -375,7 +375,7 @@ while isRunning:
             screen.blit(irina_font.render('Разработчик: vk.com/val_kd', 1, (253, 234, 168)), (350, 100))
             screen.blit(irina_font.render('Композитор: vk.com/pointerwar', 1, (253, 234, 168)), (350, 150))
             screen.blit(irina_font.render('Графика: vk.com/20usa22', 1, (253, 234, 168)), (350, 200))
-            screen.blit(irina_font.render('Группа игры: vk.com/fastprogram', 1, (253, 234, 168)), (350, 250))
+            screen.blit(irina_font.render('Группа игры: vk.com/dagonsapps', 1, (253, 234, 168)), (350, 250))
 
             if seconds > 200:
                 if money == 0:
